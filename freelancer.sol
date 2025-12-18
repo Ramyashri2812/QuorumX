@@ -63,7 +63,9 @@ contract EscrowMilestones {
         require(!m.released, "Already released");
         m.released = true;
         j.releasedAmount += m.amount;
-        payable(j.freelancer).transfer(m.amount);
+        //payable(j.freelancer).transfer(m.amount);
+        (bool success, ) = payable (j.freelancer).call{value:m.amount}("");
+        require(success, "transfer failed");
     }
 
     function markDispute(uint256 jobId) external {
@@ -76,3 +78,4 @@ contract EscrowMilestones {
         return jobs[jobId].milestones;
     }
 }
+
